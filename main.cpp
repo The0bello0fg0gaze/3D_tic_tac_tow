@@ -12,18 +12,19 @@ void SetPos(Camera &camera);
 void MoveBlock(int move,int cpos,int mode);
 void SetBock(vector<vector<vector<int>>> &map);
 void MoveBlock(int move, Camera camera){
-    float curr = (relative.at(0)*relative.at(0))/relative.at(0);                   
-    float up = ((camera.up.x*1) +(camera.up.y*2)+(camera.up.z*3));                 
-    float right = 6 - up - curr;                                                  
     vector<float> tempview = {0,0,0}; 
     if((move == 1)){ // left 
-        
+        rectpos.x += -1; 
     }else if((move == -1)){ // right 
-
+        rectpos.x += 1;
     }else if((move == 2)){ // up
-        
+        rectpos.y += 1;
     }else if((move == -2)){ // down
-
+        rectpos.y += -1;
+    }else if((move == 3)){ //out
+        rectpos.z += 1;
+    }else if((move == -3)){ //in
+        rectpos.z += -1;
     }
 }
 
@@ -120,25 +121,26 @@ int main(void)
             SetPos(camera);
         }
         if(IsKeyPressed(KEY_A)){             // Movement for player Character
+            MoveBlock(1 ,camera); //left
         }else if(IsKeyPressed(KEY_D)){
-            camera.up = (Vector3){0,1,0};
+            MoveBlock(-1 ,camera); //right
         }else if(IsKeyPressed(KEY_W)){
-            camera.up = (Vector3){0,0,1};
+            MoveBlock(2 ,camera); //Up
         }else if(IsKeyPressed(KEY_S)){
-            camera.up = (Vector3){0,0,1};
+            MoveBlock(-2 ,camera); //Down
         }else if(IsKeyPressed(KEY_Q)){
-            camera.up = (Vector3){0,0,1};
+            MoveBlock(3 ,camera); //Down
         }else if(IsKeyPressed(KEY_E)){
-            camera.up = (Vector3){0,0,1};
+            MoveBlock(-3 ,camera); //Down
         }else if(IsKeyPressed(KEY_SPACE)){
-            camera.up = (Vector3){0,0,1};
+            map[rectpos.x][rectpos.y][rectpos.z] = player;
         }
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
                 BeginMode3D(camera); // Start 3D mode
-                    DrawCube(rectpos, 0.5f, 0.5f, 0.5f, BLACK);
                     DisplayMap(map);
+                    DrawCube(rectpos, 0.5f, 0.5f, 0.5f, BLACK);
                 EndMode3D(); // End 3D mode
                 DrawText(TextFormat("- Position: (%06.3f, %06.3f, %06.3f)", camera.position.x, camera.position.y, camera.position.z), 610, 60, 10, BLACK);
                 DrawText(TextFormat("- Target: (%06.3f, %06.3f, %06.3f)", camera.target.x, camera.target.y, camera.target.z), 610, 30, 10, BLACK);
